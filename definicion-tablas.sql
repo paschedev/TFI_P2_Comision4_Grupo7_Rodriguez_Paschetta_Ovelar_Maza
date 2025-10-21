@@ -1,0 +1,23 @@
+CREATE TABLE envios (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    eliminado BOOLEAN DEFAULT FALSE,
+    tracking VARCHAR(40) UNIQUE,
+    empresa ENUM('ANDREANI', 'OCA', 'CORREO_ARG') NOT NULL,
+    tipo ENUM('ESTANDAR', 'EXPRES'),
+    costo DOUBLE(10,2) CHECK ( costo >= 0 ),
+    fechaDespacho DATE,
+    fechaEstimada DATE,
+    estado ENUM('EN_PREPARACION', 'EN_TRANSITO', 'ENTREGADO') DEFAULT 'EN_PREPARACION'
+);
+
+CREATE TABLE pedidos (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    eliminado BOOLEAN DEFAULT FALSE,
+    numero VARCHAR(20) UNIQUE NOT NULL,
+    fecha DATE NOT NULL,
+    clienteNombre VARCHAR(120) NOT NULL,
+    total DOUBLE(12,2) NOT NULL CHECK ( total >= 0 ),
+    estado ENUM('NUEVO', 'FACTURADO', 'ENVIADO') DEFAULT 'NUEVO',
+    envio BIGINT UNIQUE,
+    FOREIGN KEY (envio) REFERENCES envios(id)
+);
