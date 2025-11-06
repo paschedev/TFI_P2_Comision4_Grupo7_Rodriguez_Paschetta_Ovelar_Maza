@@ -16,7 +16,7 @@ public class Main {
                 System.err.println("Error: No se pudo conectar a la base de datos.");
                 System.err.println("Verifique que:");
                 System.err.println("1. MySQL esté ejecutándose");
-                System.err.println("2. La base de datos 'tfi_pedidos' exista");
+                System.err.println("2. La base de datos 'gestion_envios' exista");
                 System.err.println("3. Las credenciales en database.properties sean correctas");
                 System.err.println("4. El driver de MySQL esté en el classpath");
                 System.exit(1);
