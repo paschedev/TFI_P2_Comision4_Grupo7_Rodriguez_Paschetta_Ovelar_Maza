@@ -25,23 +25,10 @@ src/tfi/
 ### Base de Datos
 - MySQL 8.0 o superior
 - Driver MySQL Connector/J
-- Base de datos: `tfi_pedidos`
+- Base de datos: `gestion_envios`
 
 ### Configuración
-1. Crear la base de datos MySQL:
-```sql
-CREATE DATABASE tfi_pedidos;
-```
-
-2. Ejecutar el script `definicion-tablas.sql` para crear las tablas.
-
-3. Configurar las credenciales en `src/database.properties`:
-```properties
-db.driver=com.mysql.cj.jdbc.Driver
-db.url=jdbc:mysql://localhost:3306/tfi_pedidos?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-db.username=tu_usuario
-db.password=tu_contraseña
-```
+Seguir los pasos descriptos en INSTALACION.md
 
 ## Características Implementadas
 
@@ -52,10 +39,10 @@ db.password=tu_contraseña
 
 ### Operaciones CRUD
 - Crear, leer, actualizar y eliminar (lógico) para ambas entidades
+- Asociación de envíos a pedidos
 - Búsquedas específicas:
-  - Pedidos por cliente
-  - Envíos por tracking
-  - Asociación de envíos a pedidos
+  - Pedidos por cliente y por ID
+  - Envíos por tracking y por ID
 
 ### Validaciones de Negocio
 - Campos obligatorios
@@ -73,12 +60,12 @@ db.password=tu_contraseña
 
 ### Compilación
 ```bash
-javac -cp ".:mysql-connector-java-8.0.33.jar" -d . src/tfi/**/*.java
+javac -cp ".:mysql-connector-java-8.2.0.jar" -d . src/tfi/**/*.java
 ```
 
 ### Ejecución
 ```bash
-java -cp ".:mysql-connector-java-8.0.33.jar" tfi.main.Main
+java -cp ".:mysql-connector-java-8.2.0.jar" tfi.main.Main
 ```
 
 ### Menú Principal
@@ -123,5 +110,5 @@ El sistema incluye manejo robusto de errores:
 ## Dependencias
 
 - Java 8 o superior
-- MySQL Connector/J 8.0.33 o superior
+- MySQL Connector/J 8.2.0 o superior
 - MySQL Server 8.0 o superior

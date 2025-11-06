@@ -28,7 +28,8 @@ public class PedidoDao implements GenericDao<Pedido> {
         "e.id as envio_id, e.tracking, e.empresa, e.tipo, e.costo, e.fechaDespacho, e.fechaEstimada, e.estado as envio_estado " +
         "FROM pedidos p " +
         "LEFT JOIN envios e ON p.envio = e.id AND e.eliminado = FALSE " +
-        "WHERE p.eliminado = FALSE ORDER BY p.id";
+        "WHERE p.eliminado = FALSE " +
+        "ORDER BY p.id ASC";
     
     private static final String UPDATE_SQL = 
         "UPDATE pedidos SET numero = ?, fecha = ?, clienteNombre = ?, total = ?, " +
@@ -236,7 +237,7 @@ public class PedidoDao implements GenericDao<Pedido> {
         pedido.setEliminado(rs.getBoolean("eliminado"));
         
         // Mapear envío si existe
-        Long envioId = rs.getLong("envio");
+        Long envioId = rs.getLong("envio_id");
         if (envioId > 0 && !rs.wasNull()) {
             Envio envio = new Envio();
             envio.setId(envioId);

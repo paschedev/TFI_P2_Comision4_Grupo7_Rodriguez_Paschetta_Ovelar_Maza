@@ -114,7 +114,7 @@ public class Pedido {
                 ", clienteNombre='" + clienteNombre + '\'' +
                 ", total=" + total +
                 ", estado=" + estado +
-                ", envio=" + (envio != null ? envio.getId() : "null") +
+                ", envio=" + (envio != null ? envio : "null") +
                 '}';
     }
     

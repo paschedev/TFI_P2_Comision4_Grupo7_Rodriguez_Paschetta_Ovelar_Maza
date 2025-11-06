@@ -13,41 +13,44 @@
 ### 3. MySQL Connector/J
 - Descargar desde: https://dev.mysql.com/downloads/connector/j/
 - Versión recomendada: 8.0.33 o superior
+- Ya incluido en el proyecto en `lib/mysql-connector-j-8.2.0.jar`
+
 
 ## Pasos de Instalación
 
 ### 1. Configurar la Base de Datos
 
-1. Iniciar MySQL Server:
+#### Configuración manual
+
+1. Si MySQL está en Docker, verifica que el contenedor esté corriendo:
+```bash
+sudo docker ps | grep mysql
+```
+
+2. Si MySQL está local, asegurate que el servicio esta corriendo correctamente:
+```bash
+sudo systemctl status mysql
+```
+
+Si no está puedes iniciarlo con el comando:
 ```bash
 sudo systemctl start mysql
-# o
-sudo service mysql start
 ```
 
-2. Conectarse a MySQL como root:
+3. Ejecutar el script SQL manualmente:
 ```bash
-mysql -u root -p
-```
-
-3. Crear la base de datos:
-```sql
-CREATE DATABASE tfi_pedidos;
-```
-
-4. Ejecutar el script de creación de tablas:
-```bash
-mysql -u root -p tfi_pedidos < definicion-tablas.sql
+mysql -h localhost -P 3306 -u root -p < setup-database.sql
 ```
 
 ### 2. Configurar el Driver MySQL
+Este paso solo es necesario si quiere una version más nueva. Ya hay un driver funcional en la carpeta `lib/`.
 
-1. Descargar MySQL Connector/J desde:
+1. Para una version más reciente descargar MySQL Connector/J desde:
    https://dev.mysql.com/downloads/connector/j/
 
 2. Extraer el archivo JAR y copiarlo a la carpeta `lib/`:
 ```bash
-cp mysql-connector-java-8.0.33.jar lib/
+cp mysql-connector-java-[version].jar lib/
 ```
 
 ### 3. Configurar las Credenciales
@@ -56,12 +59,23 @@ Editar el archivo `src/database.properties` con sus credenciales de MySQL:
 
 ```properties
 db.driver=com.mysql.cj.jdbc.Driver
-db.url=jdbc:mysql://localhost:3306/tfi_pedidos?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-db.username=tu_usuario_mysql
+db.url=jdbc:mysql://localhost:3306/gestion_envios?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+db.username=root
 db.password=tu_contraseña_mysql
 ```
 
-### 4. Compilar y Ejecutar
+**Nota:** Si usas MySQL en un docker, cambia el puerto de `3306` al puerto utilizado por el contenedor en la URL.
+
+### 4. Poblar la base de datos con datos de prueba (Opcional)
+```bash
+# Compilar primero
+./compile.sh
+
+# Ejecutar el seeder Java
+java -cp ".:classes:lib/mysql-connector-j-8.2.0.jar" tfi.main.DatabaseSeeder
+```
+
+### 5. Compilar y Ejecutar
 
 1. Compilar el proyecto:
 ```bash
@@ -76,12 +90,7 @@ db.password=tu_contraseña_mysql
 ## Verificación de la Instalación
 
 ### 1. Verificar Conexión a la Base de Datos
-El programa verificará automáticamente la conexión al iniciar. Si hay problemas:
-
-1. Verificar que MySQL esté ejecutándose
-2. Verificar que la base de datos `tfi_pedidos` exista
-3. Verificar las credenciales en `database.properties`
-4. Verificar que el driver esté en `lib/mysql-connector-java-8.0.33.jar`
+El programa verificará automáticamente la conexión al iniciar. 
 
 ### 2. Probar Funcionalidades
 1. Crear un pedido de prueba
@@ -93,12 +102,18 @@ El programa verificará automáticamente la conexión al iniciar. Si hay problem
 ## Solución de Problemas
 
 ### Error: "No se pudo conectar a la base de datos"
-- Verificar que MySQL esté ejecutándose
-- Verificar las credenciales en `database.properties`
-- Verificar que la base de datos `tfi_pedidos` exista
+- Verificar que MySQL esté ejecutándose:
+  - Docker: `docker ps | grep mysql`
+  - Local: `sudo systemctl status mysql`
+- Verificar el puerto correcto (3306 para local)
+- Verificar las credenciales en `src/database.properties`
+- Verificar que la base de datos `gestion_envios` exista:
+```bash
+   mysql -h localhost -P 13306 -u root -p -e "SHOW DATABASES;" | grep gestion_envios
+   ```
 
 ### Error: "Driver de base de datos no encontrado"
-- Verificar que `mysql-connector-java-8.0.33.jar` esté en la carpeta `lib/`
+- Verificar que `mysql-connector-java-8.2.0.jar` esté en la carpeta `lib/`
 - Verificar que el nombre del archivo sea exacto
 
 ### Error: "No se pudo encontrar el archivo database.properties"
@@ -123,9 +138,9 @@ TFI_Programacion2/
 │       ├── service/
 │       └── main/
 ├── lib/
-│   └── mysql-connector-java-8.0.33.jar
+│   └── mysql-connector-j-8.2.0.jar
 ├── classes/ (generado al compilar)
-├── definicion-tablas.sql
+├── setup-database.sql       # Script SQL para crear BD y tablas
 ├── compile.sh
 ├── run.sh
 ├── README.md
@@ -136,17 +151,17 @@ TFI_Programacion2/
 
 ### Compilar manualmente:
 ```bash
-javac -cp ".:lib/mysql-connector-java-8.0.33.jar" -d classes src/tfi/**/*.java
+javac -cp ".:lib/mysql-connector-java-8.2.0.jar" -d classes src/tfi/**/*.java
 ```
 
 ### Ejecutar manualmente:
 ```bash
-java -cp ".:lib/mysql-connector-java-8.0.33.jar:classes" tfi.main.Main
+java -cp ".:lib/mysql-connector-java-8.2.0.jar:classes" tfi.main.Main
 ```
 
 ### Verificar tablas en MySQL:
 ```sql
-USE tfi_pedidos;
+USE gestion_envios;
 SHOW TABLES;
 DESCRIBE pedidos;
 DESCRIBE envios;

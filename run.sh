@@ -12,4 +12,4 @@ if [ ! -d "classes" ]; then
 fi
 
 # Ejecutar el programa
-java -cp ".:/usr/share/java/mysql-connector-j-9.4.0.jar:classes" tfi.main.Main
+java -cp ".:lib/mysql-connector-j-8.2.0.jar:classes" tfi.main.Main

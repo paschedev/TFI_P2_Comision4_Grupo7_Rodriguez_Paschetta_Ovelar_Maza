@@ -9,7 +9,7 @@ echo "Compilando el Sistema de Gestión de Pedidos y Envíos..."
 mkdir -p classes
 
 # Compilar todas las clases Java
-javac -cp ".:/usr/share/java/mysql-connector-j-9.4.0.jar" -d classes src/tfi/**/*.java
+javac -cp ".:lib/mysql-connector-j-8.2.0.jar" -d classes src/tfi/**/*.java
 
 if [ $? -eq 0 ]; then
     echo "Compilación exitosa!"

@@ -52,9 +52,15 @@ public class AppMenu {
                         asociarEnvioAPedido();
                         break;
                     case "4":
-                        buscarPedidosPorCliente();
+                        crearPedidoConEnvio();
                         break;
                     case "5":
+                        crearEnvioYAsociarAPedido();
+                        break;
+                    case "6":
+                        buscarPedidosPorCliente();
+                        break;
+                    case "7":
                         buscarEnvioPorTracking();
                         break;
                     case "0":
@@ -87,8 +93,10 @@ public class AppMenu {
         System.out.println("1. Gestionar Pedidos");
         System.out.println("2. Gestionar Envíos");
         System.out.println("3. Asociar Envío a Pedido");
-        System.out.println("4. Buscar Pedidos por Cliente");
-        System.out.println("5. Buscar Envío por Tracking");
+        System.out.println("4. Crear Pedido con Envío (Transacción)");
+        System.out.println("5. Crear Envío y Asociar a Pedido (Transacción)");
+        System.out.println("6. Buscar Pedidos por Cliente");
+        System.out.println("7. Buscar Envío por Tracking");
         System.out.println("0. Salir");
         System.out.println("========================");
     }
@@ -579,5 +587,83 @@ public class AppMenu {
                     System.out.println("Opción inválida. Por favor, seleccione 1 o 2.");
             }
         }
+    }
+    
+    /**
+     * OPERACIÓN COMPUESTA: Crea un pedido con un envío en una sola transacción.
+     */
+    private void crearPedidoConEnvio() throws ServiceException {
+        System.out.println("\n--- CREAR PEDIDO CON ENVÍO (OPERACIÓN COMPUESTA) ---");
+        System.out.println("Esta operación creará un pedido y un envío en una sola transacción.");
+        
+        // Datos del pedido
+        System.out.println("\n--- DATOS DEL PEDIDO ---");
+        String numero = leerEntrada("Número del pedido: ");
+        LocalDate fecha = leerFecha("Fecha del pedido (dd/MM/yyyy): ");
+        String clienteNombre = leerEntrada("Nombre del cliente: ");
+        double total = leerDouble("Total del pedido: ");
+        
+        Pedido pedido = new Pedido(numero, fecha, clienteNombre, total);
+        
+        // Datos del envío
+        System.out.println("\n--- DATOS DEL ENVÍO ---");
+        String tracking = leerEntrada("Número de tracking: ");
+        Envio.EmpresaEnvio empresa = leerEmpresaEnvio();
+        Envio.TipoEnvio tipo = leerTipoEnvio();
+        double costo = leerDouble("Costo del envío: ");
+        
+        Envio envio = new Envio(tracking, empresa, tipo, costo);
+        
+        // Ejecutar operación compuesta
+        Pedido pedidoCreado = pedidoService.crearPedidoConEnvio(pedido, envio);
+        
+        System.out.println("\n¡Operación compuesta exitosa!");
+        System.out.println("Pedido creado con ID: " + pedidoCreado.getId());
+        System.out.println("Envío creado con ID: " + pedidoCreado.getEnvio().getId());
+        System.out.println("Pedido completo:");
+        System.out.println(pedidoCreado);
+    }
+    
+    /**
+     * OPERACIÓN COMPUESTA: Crea un envío y lo asocia a un pedido existente.
+     */
+    private void crearEnvioYAsociarAPedido() throws ServiceException {
+        System.out.println("\n--- CREAR ENVÍO Y ASOCIAR A PEDIDO (OPERACIÓN COMPUESTA) ---");
+        System.out.println("Esta operación creará un envío y lo asociará a un pedido existente en una sola transacción.");
+        
+        // ID del pedido
+        Long pedidoId = leerLong("ID del pedido existente: ");
+        
+        // Verificar que el pedido existe
+        Pedido pedido = pedidoService.getById(pedidoId);
+        if (pedido == null) {
+            System.out.println("No se encontró un pedido con ID: " + pedidoId);
+            return;
+        }
+        
+        System.out.println("Pedido encontrado:");
+        System.out.println(pedido);
+        
+        if (pedido.getEnvio() != null) {
+            System.out.println("Este pedido ya tiene un envío asociado. No se puede crear otro.");
+            return;
+        }
+        
+        // Datos del envío
+        System.out.println("\n--- DATOS DEL ENVÍO ---");
+        String tracking = leerEntrada("Número de tracking: ");
+        Envio.EmpresaEnvio empresa = leerEmpresaEnvio();
+        Envio.TipoEnvio tipo = leerTipoEnvio();
+        double costo = leerDouble("Costo del envío: ");
+        
+        Envio envio = new Envio(tracking, empresa, tipo, costo);
+        
+        // Ejecutar operación compuesta
+        Pedido pedidoActualizado = pedidoService.crearEnvioYAsociarAPedido(pedidoId, envio);
+        
+        System.out.println("\n¡Operación compuesta exitosa!");
+        System.out.println("Envío creado con ID: " + pedidoActualizado.getEnvio().getId());
+        System.out.println("Pedido actualizado:");
+        System.out.println(pedidoActualizado);
     }
 }
