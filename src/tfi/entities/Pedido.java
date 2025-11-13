@@ -2,11 +2,11 @@ package tfi.entities;
 
 import java.time.LocalDate;
 
-/**
- * Entidad que representa un pedido.
- * Corresponde a la tabla 'pedidos' en la base de datos.
- * Mantiene una relación 1→1 unidireccional con Envio.
- */
+/*
+    Entidad que representa un pedido.
+    Corresponde a la tabla 'pedidos' en la base de datos.
+    Mantiene una relación 1→1 unidireccional con Envio.
+*/
 public class Pedido {
     
     private Long id;
@@ -19,17 +19,18 @@ public class Pedido {
     private Envio envio; // Relación 1→1 unidireccional
     
     // Constructores
-    public Pedido() {
-        this.eliminado = false;
-        this.estado = EstadoPedido.NUEVO;
-    }
+    public Pedido() {}
     
-    public Pedido(String numero, LocalDate fecha, String clienteNombre, double total) {
-        this();
+    public Pedido(Long id, Boolean eliminado, String numero, LocalDate fecha,
+                  String clienteNombre, double total, EstadoPedido estado, Envio envio) {
+        this.id = id;
+        this.eliminado = eliminado;
         this.numero = numero;
         this.fecha = fecha;
         this.clienteNombre = clienteNombre;
         this.total = total;
+        this.estado = estado;
+        this.envio = envio;
     }
     
     // Getters y Setters
@@ -133,6 +134,6 @@ public class Pedido {
     
     // Enum
     public enum EstadoPedido {
-        NUEVO, FACTURADO, ENVIADO
+        NUEVO, FACTURADO, ENVIADO;
     }
 }
