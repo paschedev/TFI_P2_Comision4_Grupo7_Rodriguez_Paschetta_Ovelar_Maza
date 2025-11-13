@@ -2,10 +2,10 @@ package tfi.entities;
 
 import java.time.LocalDate;
 
-/**
- * Entidad que representa un envío.
- * Corresponde a la tabla 'envios' en la base de datos.
- */
+/*
+    Entidad que representa un envío.
+    Corresponde a la tabla 'envios' en la base de datos.
+*/
 public class Envio {
     
     private Long id;
@@ -19,17 +19,20 @@ public class Envio {
     private EstadoEnvio estado;
     
     // Constructores
-    public Envio() {
-        this.eliminado = false;
-        this.estado = EstadoEnvio.EN_PREPARACION;
-    }
+    public Envio() {}
     
-    public Envio(String tracking, EmpresaEnvio empresa, TipoEnvio tipo, double costo) {
-        this();
+    public Envio(Long id, Boolean eliminado, String tracking, EmpresaEnvio empresa,
+            TipoEnvio tipo, double costo, LocalDate fechaDespacho,
+            LocalDate fechaEstimada, EstadoEnvio estado) {
+        this.id = id;
+        this.eliminado = eliminado;
         this.tracking = tracking;
         this.empresa = empresa;
         this.tipo = tipo;
         this.costo = costo;
+        this.fechaDespacho = fechaDespacho;
+        this.fechaEstimada = fechaEstimada;
+        this.estado = estado;
     }
     
     // Getters y Setters
@@ -134,14 +137,14 @@ public class Envio {
     
     // Enums
     public enum EmpresaEnvio {
-        ANDREANI, OCA, CORREO_ARG
+        ANDREANI, OCA, CORREO_ARG;
     }
     
     public enum TipoEnvio {
-        ESTANDAR, EXPRES
+        ESTANDAR, EXPRES;
     }
     
     public enum EstadoEnvio {
-        EN_PREPARACION, EN_TRANSITO, ENTREGADO
+        EN_PREPARACION, EN_TRANSITO, ENTREGADO;
     }
 }
